@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apni Pathshala</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --teal: #1a78fc;
+      --teal-dark: #1565d8;
+      --teal-light: #4a9eff;
+      --ink: #0f172a;
+      --ink-light: #1f2937;
+      --ink-muted: #6b7280;
+      --surface: #ffffff;
+      --surface-elevated: #f7f9ff;
+      --sage: #34c759;
+      --sage-glow: rgba(52, 199, 89, 0.4);
+      --rose: #b91c1c;
+      --amber: #f98a1d;
+      --blue: #1a78fc;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      width: 360px;
+      min-height: 420px;
+      max-height: 580px;
+      font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--surface);
+      color: var(--ink);
+      overflow-x: hidden;
+      overflow-y: auto;
+      position: relative;
+    }
+
+    /* Dot pattern background */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: radial-gradient(rgba(26, 120, 252, 0.12) 1px, transparent 1px);
+      background-size: 20px 20px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+
+    /* Gradient mesh */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 0% 0%, rgba(26, 120, 252, 0.1) 0%, transparent 50%),
+        radial-gradient(ellipse at 100% 100%, rgba(249, 138, 29, 0.08) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+
+    .container {
+      position: relative;
+      padding: 24px 20px;
+      z-index: 1;
+    }
+
+    /* ========== NOTIFICATION TOAST ========== */
+    .notification-toast {
+      position: fixed;
+      top: 12px;
+      left: 12px;
+      right: 12px;
+      background: var(--surface-elevated);
+      border-radius: 12px;
+      padding: 12px 14px;
+      display: none;
+      align-items: center;
+      gap: 10px;
+      z-index: 100;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+      animation: slideDown 0.3s ease-out;
+    }
+
+    .notification-toast.show {
+      display: flex;
+    }
+
+    .notification-toast.success {
+      border-left: 4px solid var(--sage);
+    }
+
+    .notification-toast.error {
+      border-left: 4px solid var(--rose);
+    }
+
+    .notification-toast.warning {
+      border-left: 4px solid var(--amber);
+    }
+
+    .notification-toast.info {
+      border-left: 4px solid var(--blue);
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .notification-toast svg {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+    }
+
+    .notification-toast.success svg { color: var(--sage); }
+    .notification-toast.error svg { color: var(--rose); }
+    .notification-toast.warning svg { color: var(--amber); }
+    .notification-toast.info svg { color: var(--blue); }
+
+    .notification-toast .message {
+      flex: 1;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--ink);
+    }
+
+    .notification-toast .close-btn {
+      background: none;
+      border: none;
+      padding: 4px;
+      cursor: pointer;
+      color: var(--ink-muted);
+    }
+
+    .notification-toast .close-btn:hover {
+      color: var(--ink);
+    }
+
+    /* ========== LOGIN VIEW ========== */
+    .login-view {
+      animation: fadeSlideIn 0.4s ease-out;
+    }
+
+    @keyframes fadeSlideIn {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .logo-mark {
+      width: 52px;
+      height: 52px;
+      background: linear-gradient(145deg, var(--teal) 0%, var(--teal-dark) 100%);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 14px;
+      box-shadow: 0 8px 24px rgba(20, 184, 166, 0.3);
+    }
+
+    .logo-mark svg {
+      width: 26px;
+      height: 26px;
+      color: white;
+    }
+
+    .brand-name {
+      color: var(--ink);
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      margin-bottom: 4px;
+    }
+
+    .brand-tagline {
+      color: var(--ink-muted);
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .form-card {
+      background: var(--surface-elevated);
+      border: 1px solid rgba(20, 184, 166, 0.12);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow:
+        0 4px 6px rgba(0, 0, 0, 0.02),
+        0 12px 40px rgba(0, 0, 0, 0.06);
+    }
+
+    .form-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .form-title::before {
+      content: '';
+      width: 3px;
+      height: 14px;
+      background: linear-gradient(180deg, var(--teal), var(--teal-dark));
+      border-radius: 2px;
+    }
+
+    .input-group {
+      margin-bottom: 14px;
+    }
+
+    .input-group label {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--ink-light);
+      margin-bottom: 6px;
+    }
+
+    .input-wrapper {
+      position: relative;
+    }
+
+    .input-wrapper svg {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 16px;
+      height: 16px;
+      color: #9ca3af;
+      transition: color 0.2s;
+      pointer-events: none;
+    }
+
+    .input-wrapper input {
+      width: 100%;
+      padding: 12px 44px 12px 40px;
+      border: 2px solid #e5e7eb;
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink);
+      background: #f9fafb;
+      transition: all 0.2s ease;
+      box-sizing: border-box;
+    }
+
+    .toggle-visibility {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 30px;
+      height: 30px;
+      border: none;
+      background: transparent;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      padding: 0;
+      color: #9ca3af;
+    }
+
+    .toggle-visibility svg {
+      width: 16px;
+      height: 16px;
+      pointer-events: none;
+    }
+
+    .toggle-visibility:hover {
+      color: var(--ink);
+    }
+
+    .toggle-visibility:focus-visible {
+      outline: 2px solid rgba(20, 184, 166, 0.4);
+      border-radius: 6px;
+    }
+
+    .toggle-visibility .icon-hide {
+      display: none;
+    }
+
+    .toggle-visibility.showing .icon-show {
+      display: none;
+    }
+
+    .toggle-visibility.showing .icon-hide {
+      display: block;
+    }
+
+
+    .input-wrapper input::placeholder {
+      color: #9ca3af;
+      font-weight: 400;
+    }
+
+    .input-wrapper input:focus {
+      outline: none;
+      border-color: var(--teal);
+      background: white;
+      box-shadow: 0 0 0 4px rgba(20, 184, 166, 0.1);
+    }
+
+    .input-wrapper input:focus + svg,
+    .input-wrapper:focus-within svg {
+      color: var(--teal);
+    }
+
+    .error-toast {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      border-radius: 8px;
+      padding: 10px 12px;
+      margin-bottom: 14px;
+      display: none;
+      align-items: center;
+      gap: 8px;
+      animation: shake 0.4s ease;
+    }
+
+    .error-toast.show {
+      display: flex;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-4px); }
+      40%, 80% { transform: translateX(4px); }
+    }
+
+    .error-toast svg {
+      width: 16px;
+      height: 16px;
+      color: var(--rose);
+      flex-shrink: 0;
+    }
+
+    .error-toast span {
+      font-size: 12px;
+      font-weight: 500;
+      color: #dc2626;
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 12px 18px;
+      background: linear-gradient(145deg, var(--teal) 0%, var(--teal-dark) 100%);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 16px rgba(20, 184, 166, 0.3);
+    }
+
+    .login-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(20, 184, 166, 0.35);
+    }
+
+    .login-btn:active {
+      transform: translateY(0);
+    }
+
+    .login-btn:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .login-btn svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .spinner {
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* ========== DASHBOARD VIEW ========== */
+    .dashboard-view {
+      display: none;
+      animation: fadeSlideIn 0.4s ease-out;
+    }
+
+    .dashboard-view.active {
+      display: block;
+    }
+
+    .status-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      border-radius: 16px;
+      padding: 5px 10px;
+    }
+
+    .status-badge.offline {
+      background: rgba(245, 158, 11, 0.1);
+      border-color: rgba(245, 158, 11, 0.2);
+    }
+
+    .status-badge.offline .status-dot {
+      background: var(--amber);
+      box-shadow: 0 0 8px rgba(245, 158, 11, 0.4);
+    }
+
+    .status-badge.offline span {
+      color: #d97706;
+    }
+
+    .status-badge.error {
+      background: rgba(239, 68, 68, 0.1);
+      border-color: rgba(239, 68, 68, 0.2);
+    }
+
+    .status-badge.error .status-dot {
+      background: var(--rose);
+      box-shadow: 0 0 8px rgba(239, 68, 68, 0.4);
+      animation: none;
+    }
+
+    .status-badge.error span {
+      color: #dc2626;
+    }
+
+    .status-badge.syncing .status-dot {
+      animation: spin 1s linear infinite;
+      background: var(--blue);
+      box-shadow: 0 0 8px rgba(59, 130, 246, 0.4);
+    }
+
+    .status-badge.syncing span {
+      color: #2563eb;
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      background: var(--sage);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--sage-glow);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.7; transform: scale(0.9); }
+    }
+
+    .status-badge span {
+      font-size: 11px;
+      font-weight: 600;
+      color: #059669;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .sync-btn {
+      background: none;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 6px 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--ink-muted);
+      transition: all 0.2s;
+    }
+
+    .sync-btn:hover {
+      border-color: var(--teal);
+      color: var(--teal);
+    }
+
+    .sync-btn svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    .sync-btn.syncing svg {
+      animation: spin 1s linear infinite;
+    }
+
+    .profile-card {
+      background: var(--surface-elevated);
+      border: 1px solid rgba(20, 184, 166, 0.12);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 12px;
+      box-shadow:
+        0 4px 6px rgba(0, 0, 0, 0.02),
+        0 12px 40px rgba(0, 0, 0, 0.06);
+    }
+
+    .profile-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .avatar {
+      width: 44px;
+      height: 44px;
+      background: linear-gradient(145deg, var(--teal) 0%, var(--teal-dark) 100%);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 700;
+      color: white;
+      box-shadow: 0 4px 12px rgba(20, 184, 166, 0.3);
+    }
+
+    .profile-info {
+      flex: 1;
+    }
+
+    .profile-name {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 2px;
+    }
+
+    .profile-id {
+      font-size: 12px;
+      color: var(--ink-muted);
+      font-weight: 500;
+    }
+
+    .session-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .session-item {
+      background: #f9fafb;
+      border-radius: 10px;
+      padding: 10px;
+    }
+
+    .session-item .label {
+      font-size: 10px;
+      font-weight: 600;
+      color: #9ca3af;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      margin-bottom: 3px;
+    }
+
+    .session-item .value {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .session-item.full {
+      grid-column: 1 / -1;
+    }
+
+    /* Time Restriction Warning */
+    .time-restriction-warning {
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      border-radius: 10px;
+      padding: 10px 12px;
+      margin-bottom: 12px;
+      display: none;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .time-restriction-warning.show {
+      display: flex;
+    }
+
+    .time-restriction-warning svg {
+      width: 18px;
+      height: 18px;
+      color: var(--amber);
+      flex-shrink: 0;
+    }
+
+    .time-restriction-warning span {
+      font-size: 12px;
+      font-weight: 500;
+      color: #92400e;
+    }
+
+    /* ========== TAB NAVIGATION ========== */
+    .tab-nav {
+      display: flex;
+      background: var(--surface-elevated);
+      border-radius: 10px;
+      padding: 4px;
+      margin-bottom: 12px;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 8px 12px;
+      background: none;
+      border: none;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--ink-muted);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .tab-btn.active {
+      background: var(--teal);
+      color: white;
+    }
+
+    .tab-btn:not(.active):hover {
+      background: #f3f4f6;
+    }
+
+    /* ========== ACTIVITY HISTORY ========== */
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .activity-list {
+      background: var(--surface-elevated);
+      border-radius: 12px;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    .activity-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .activity-item:last-child {
+      border-bottom: none;
+    }
+
+    .activity-favicon {
+      width: 20px;
+      height: 20px;
+      border-radius: 4px;
+      background: #f3f4f6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .activity-favicon img {
+      width: 16px;
+      height: 16px;
+    }
+
+    .activity-favicon svg {
+      width: 12px;
+      height: 12px;
+      color: var(--ink-muted);
+    }
+
+    .activity-details {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .activity-domain {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--ink);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .activity-time {
+      font-size: 10px;
+      color: var(--ink-muted);
+    }
+
+    .activity-duration {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--ink-muted);
+      padding: 3px 6px;
+      background: #f3f4f6;
+      border-radius: 6px;
+    }
+
+    .activity-blocked {
+      color: var(--rose);
+      background: rgba(239, 68, 68, 0.1);
+    }
+
+    .empty-activity {
+      padding: 24px;
+      text-align: center;
+      color: var(--ink-muted);
+      font-size: 12px;
+    }
+
+    .logout-btn {
+      width: 100%;
+      padding: 12px 18px;
+      background: white;
+      border: 2px solid #e5e7eb;
+      border-radius: 10px;
+      color: var(--ink);
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+      margin-top: 12px;
+    }
+
+    .logout-btn:hover {
+      border-color: var(--rose);
+      color: var(--rose);
+      background: #fef2f2;
+    }
+
+    .logout-btn svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* Footer branding */
+    .footer {
+      text-align: center;
+      margin-top: 16px;
+    }
+
+    .footer span {
+      font-size: 10px;
+      color: #d1d5db;
+      font-weight: 500;
+    }
+
+    /* Scrollbar styling */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #d1d5db;
+      border-radius: 3px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #9ca3af;
+    }
+  </style>
+</head>
+<body>
+  <!-- Notification Toast -->
+  <div id="notification-toast" class="notification-toast">
+    <svg id="notification-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/>
+      <line x1="12" y1="8" x2="12" y2="12"/>
+      <line x1="12" y1="16" x2="12.01" y2="16"/>
+    </svg>
+    <span class="message"></span>
+    <button class="close-btn" onclick="hideNotification()">
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="18" y1="6" x2="6" y2="18"/>
+        <line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+  </div>
+
+  <div class="container">
+    <!-- Login View -->
+    <div id="login-view" class="login-view">
+      <div class="header">
+        <div class="logo-mark">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            <path d="M9 12l2 2 4-4"/>
+          </svg>
+        </div>
+        <h1 class="brand-name">Apni Pathshala</h1>
+        <p class="brand-tagline">Student Safety System</p>
+      </div>
+
+      <div class="form-card">
+        <div class="form-title">Student Login</div>
+
+        <form id="login-form">
+          <div class="input-group">
+            <label>Student ID</label>
+            <div class="input-wrapper">
+              <input
+                type="text"
+                id="student-id"
+                inputmode="numeric"
+                pattern="[0-9]*"
+                maxlength="8"
+                placeholder="Enter 6-8 digit ID"
+                autocomplete="off"
+                required
+              >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+              </svg>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label>PIN Code</label>
+            <div class="input-wrapper">
+              <input
+                type="password"
+                id="pin"
+                inputmode="numeric"
+                pattern="[0-9]*"
+                maxlength="4"
+                placeholder="Enter 4-digit PIN"
+                autocomplete="off"
+                required
+              >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+              <button class="toggle-visibility" type="button" aria-label="Show PIN" title="Show PIN">
+                <svg class="icon-show" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                  <circle cx="12" cy="12" r="3"/>
+                </svg>
+                <svg class="icon-hide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a21.77 21.77 0 0 1 5.11-6.73"/>
+                  <path d="M1 1l22 22"/>
+                  <path d="M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 8 11 8a21.77 21.77 0 0 1-3.19 4.56"/>
+                  <path d="M9.9 9.9a3 3 0 0 0 4.24 4.24"/>
+                  <path d="M14.12 14.12 9.88 9.88"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+
+          <div id="error-message" class="error-toast">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="8" x2="12" y2="12"/>
+              <line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+            <span></span>
+          </div>
+
+          <button type="submit" id="login-btn" class="login-btn">
+            <span class="btn-text">Sign In</span>
+            <svg class="btn-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12"/>
+              <polyline points="12 5 19 12 12 19"/>
+            </svg>
+            <div class="spinner hidden"></div>
+          </button>
+        </form>
+      </div>
+
+
+    </div>
+
+    <!-- Dashboard View -->
+    <div id="dashboard-view" class="dashboard-view">
+      <div class="status-bar">
+        <div id="status-badge" class="status-badge">
+          <div class="status-dot"></div>
+          <span>Connected</span>
+        </div>
+        <button id="sync-btn" class="sync-btn" title="Sync now">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 2v6h-6"/>
+            <path d="M3 12a9 9 0 0 1 15-6.7L21 8"/>
+            <path d="M3 22v-6h6"/>
+            <path d="M21 12a9 9 0 0 1-15 6.7L3 16"/>
+          </svg>
+          Sync
+        </button>
+      </div>
+
+      <!-- Time Restriction Warning -->
+      <div id="time-restriction-warning" class="time-restriction-warning">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <polyline points="12 6 12 12 16 14"/>
+        </svg>
+        <span id="time-restriction-message">Access restricted during this time.</span>
+      </div>
+
+      <div class="profile-card">
+        <div class="profile-header">
+          <div class="avatar" id="avatar-initial">S</div>
+          <div class="profile-info">
+            <div id="student-name" class="profile-name">Student Name</div>
+            <div id="student-id-display" class="profile-id">ID: 12345678</div>
+          </div>
+        </div>
+
+        <div class="session-grid">
+          <div class="session-item full">
+            <div class="label">Learning Center</div>
+            <div class="value" id="center-name">Loading...</div>
+          </div>
+          <div class="session-item">
+            <div class="label">Started</div>
+            <div class="value" id="session-start">--:--</div>
+          </div>
+          <div class="session-item">
+            <div class="label">Duration</div>
+            <div class="value" id="session-duration">0h 0m</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab Navigation -->
+      <div class="tab-nav">
+        <button class="tab-btn active" data-tab="session">Session</button>
+        <button class="tab-btn" data-tab="activity">Activity</button>
+      </div>
+
+      <!-- Session Tab -->
+      <div id="session-tab" class="tab-content active">
+        <div class="profile-card" style="padding: 12px;">
+          <div class="session-grid">
+            <div class="session-item">
+              <div class="label">Sites Visited</div>
+              <div class="value" id="sites-visited">0</div>
+            </div>
+            <div class="session-item">
+              <div class="label">Blocked</div>
+              <div class="value" id="blocked-count" style="color: var(--rose)">0</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Activity Tab -->
+      <div id="activity-tab" class="tab-content">
+        <div class="activity-list" id="activity-list">
+          <div class="empty-activity">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-bottom: 8px; opacity: 0.5;">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M12 6v6l4 2"/>
+            </svg>
+            <p>No activity recorded yet</p>
+          </div>
+        </div>
+      </div>
+
+      <button id="logout-btn" class="logout-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+          <polyline points="16 17 21 12 16 7"/>
+          <line x1="21" y1="12" x2="9" y2="12"/>
+        </svg>
+        End Session
+      </button>
+
+
+    </div>
+  </div>
+
+  <script src="popup.js" type="module"></script>
+</body>
+</html>

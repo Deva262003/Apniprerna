@@ -1,0 +1,74 @@
+{
+  "manifest_version": 3,
+  "name": "Apni Pathshala Student Safety",
+  "version": "1.0.6",
+
+  "description": "Student authentication, activity monitoring, and content filtering for Apni Pathshala learning centers",
+
+  "permissions": [
+    "storage",
+    "tabs",
+    "webNavigation",
+    "declarativeNetRequest",
+    "declarativeNetRequestFeedback",
+    "alarms",
+    "idle"
+  ],
+
+  "host_permissions": [
+    "<all_urls>"
+  ],
+
+  "background": {
+    "service_worker": "background/service-worker.js",
+    "type": "module"
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content/blocker-overlay.js"],
+      "run_at": "document_start",
+      "all_frames": true
+    }
+  ],
+
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+
+  "chrome_url_overrides": {
+    "newtab": "newtab/newtab.html"
+  },
+
+  "web_accessible_resources": [
+    {
+      "resources": ["icons/*"],
+      "matches": ["<all_urls>"]
+    }
+  ],
+
+  "declarative_net_request": {
+    "rule_resources": [
+      {
+        "id": "default_blocklist",
+        "enabled": true,
+        "path": "rules/default-blocklist.json"
+      }
+    ]
+  },
+
+  "update_url": "https://api.extension.apnipathshala.org/api/v1/extension/updates.xml",
+  "minimum_chrome_version": "116"
+}

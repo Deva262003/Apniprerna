@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Generate SSS Icons</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background: #ffffff;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      color: #1f2937;
+      margin-bottom: 10px;
+    }
+    p {
+      color: #6b7280;
+      margin-bottom: 30px;
+    }
+    .icons-container {
+      display: flex;
+      gap: 40px;
+      align-items: flex-end;
+      margin-bottom: 40px;
+    }
+    .icon-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    .icon-label {
+      font-size: 14px;
+      color: #6b7280;
+    }
+    canvas {
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .buttons {
+      display: flex;
+      gap: 16px;
+    }
+    button {
+      padding: 12px 24px;
+      background: linear-gradient(145deg, #1a78fc, #1565d8);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(26, 120, 252, 0.4);
+    }
+    .instructions {
+      margin-top: 40px;
+      padding: 20px;
+      background: white;
+      border-radius: 12px;
+      max-width: 500px;
+      text-align: left;
+    }
+    .instructions h3 {
+      color: #1f2937;
+      margin-bottom: 12px;
+    }
+    .instructions ol {
+      color: #6b7280;
+      line-height: 1.8;
+      padding-left: 20px;
+    }
+    .instructions code {
+      background: #f3f4f6;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <h1>SSS Extension Icons</h1>
+  <p>Apni Pathshala brand icons for Student Safety System</p>
+
+  <div class="icons-container">
+    <div class="icon-wrapper">
+      <canvas id="icon16" width="16" height="16"></canvas>
+      <span class="icon-label">16x16</span>
+    </div>
+    <div class="icon-wrapper">
+      <canvas id="icon48" width="48" height="48"></canvas>
+      <span class="icon-label">48x48</span>
+    </div>
+    <div class="icon-wrapper">
+      <canvas id="icon128" width="128" height="128"></canvas>
+      <span class="icon-label">128x128</span>
+    </div>
+  </div>
+
+  <div class="buttons">
+    <button onclick="downloadIcon(16)">Download 16px</button>
+    <button onclick="downloadIcon(48)">Download 48px</button>
+    <button onclick="downloadIcon(128)">Download 128px</button>
+    <button onclick="downloadAll()">Download All</button>
+  </div>
+
+  <div class="instructions">
+    <h3>Instructions</h3>
+    <ol>
+      <li>Click the download buttons above to save each icon</li>
+      <li>Move the downloaded files to <code>sss-chrome-extension/icons/</code></li>
+      <li>Replace the existing <code>icon16.png</code>, <code>icon48.png</code>, and <code>icon128.png</code></li>
+      <li>Reload the extension in Chrome</li>
+    </ol>
+  </div>
+
+  <script>
+    function drawIcon(ctx, size) {
+      // Clear canvas
+      ctx.clearRect(0, 0, size, size);
+
+      // Background gradient
+      const gradient = ctx.createLinearGradient(0, 0, size, size);
+      gradient.addColorStop(0, '#1a78fc');  // Brand blue
+      gradient.addColorStop(1, '#1565d8');  // Deep blue
+
+      // Rounded rectangle background
+      const radius = size * 0.22;
+      ctx.beginPath();
+      ctx.moveTo(radius, 0);
+      ctx.lineTo(size - radius, 0);
+      ctx.quadraticCurveTo(size, 0, size, radius);
+      ctx.lineTo(size, size - radius);
+      ctx.quadraticCurveTo(size, size, size - radius, size);
+      ctx.lineTo(radius, size);
+      ctx.quadraticCurveTo(0, size, 0, size - radius);
+      ctx.lineTo(0, radius);
+      ctx.quadraticCurveTo(0, 0, radius, 0);
+      ctx.closePath();
+      ctx.fillStyle = gradient;
+      ctx.fill();
+
+      // Shield icon
+      ctx.strokeStyle = 'white';
+      ctx.fillStyle = 'white';
+      ctx.lineWidth = size * 0.08;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+
+      const centerX = size / 2;
+      const centerY = size / 2;
+      const scale = size / 24; // Scale based on 24x24 viewBox
+
+      // Shield path
+      ctx.beginPath();
+      const shieldTop = centerY - 6 * scale;
+      const shieldBottom = centerY + 7 * scale;
+      const shieldWidth = 6 * scale;
+
+      // Draw shield outline
+      ctx.moveTo(centerX, shieldTop - 2 * scale);
+      ctx.lineTo(centerX + shieldWidth, shieldTop + scale);
+      ctx.lineTo(centerX + shieldWidth, centerY + scale);
+      ctx.quadraticCurveTo(centerX + shieldWidth, shieldBottom, centerX, shieldBottom + 2 * scale);
+      ctx.quadraticCurveTo(centerX - shieldWidth, shieldBottom, centerX - shieldWidth, centerY + scale);
+      ctx.lineTo(centerX - shieldWidth, shieldTop + scale);
+      ctx.closePath();
+      ctx.stroke();
+
+      // Checkmark
+      ctx.beginPath();
+      ctx.moveTo(centerX - 2.5 * scale, centerY);
+      ctx.lineTo(centerX - 0.5 * scale, centerY + 2 * scale);
+      ctx.lineTo(centerX + 3 * scale, centerY - 2 * scale);
+      ctx.stroke();
+    }
+
+    function downloadIcon(size) {
+      const canvas = document.getElementById(`icon${size}`);
+      const link = document.createElement('a');
+      link.download = `icon${size}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    }
+
+    function downloadAll() {
+      [16, 48, 128].forEach((size, index) => {
+        setTimeout(() => downloadIcon(size), index * 200);
+      });
+    }
+
+    // Generate icons on load
+    [16, 48, 128].forEach(size => {
+      const canvas = document.getElementById(`icon${size}`);
+      const ctx = canvas.getContext('2d');
+      drawIcon(ctx, size);
+    });
+  </script>
+</body>
+</html>

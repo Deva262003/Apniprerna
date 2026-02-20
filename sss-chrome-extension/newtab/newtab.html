@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>New Tab - Apni Pathshala</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+    }
+
+    body {
+      font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #ffffff;
+      color: #0f172a;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Subtle dot pattern */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: radial-gradient(rgba(26, 120, 252, 0.08) 1px, transparent 1px);
+      background-size: 32px 32px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 24px;
+      min-height: 100vh;
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 48px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-logo {
+      width: 44px;
+      height: 44px;
+      background: linear-gradient(145deg, #1a78fc, #1565d8);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(26, 120, 252, 0.25);
+    }
+
+    .brand-logo svg {
+      width: 22px;
+      height: 22px;
+      color: white;
+    }
+
+    .brand-text {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1f2937;
+    }
+
+    .clock-widget {
+      text-align: right;
+    }
+
+    .clock {
+      font-size: 32px;
+      font-weight: 600;
+      color: #1f2937;
+      letter-spacing: -1px;
+    }
+
+    .date {
+      font-size: 14px;
+      color: #6b7280;
+      margin-top: 2px;
+    }
+
+    /* Welcome Section */
+    .welcome-section {
+      margin-bottom: 40px;
+    }
+
+    .welcome-text {
+      font-size: 28px;
+      font-weight: 700;
+      color: #1f2937;
+      margin-bottom: 8px;
+    }
+
+    .welcome-sub {
+      font-size: 16px;
+      color: #6b7280;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .status-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(52, 199, 89, 0.12);
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      background: #34c759;
+      border-radius: 50%;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .status-text {
+      font-size: 12px;
+      font-weight: 600;
+      color: #1e7b3a;
+    }
+
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+
+    .stat-card {
+      background: white;
+      border: 1px solid rgba(20, 184, 166, 0.1);
+      border-radius: 16px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 28px;
+      font-weight: 700;
+      color: #1a78fc;
+      margin-bottom: 4px;
+    }
+
+    .stat-label {
+      font-size: 13px;
+      color: #6b7280;
+      font-weight: 500;
+    }
+
+    /* Quick Links */
+    .section-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #9ca3af;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 16px;
+    }
+
+    .quick-links {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 12px;
+      margin-bottom: 40px;
+    }
+
+    .quick-link {
+      background: white;
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+
+    .quick-link:hover {
+      border-color: #1a78fc;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(26, 120, 252, 0.15);
+    }
+
+    .quick-link-icon {
+      width: 40px;
+      height: 40px;
+      background: #f3f4f6;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #6b7280;
+      transition: all 0.2s;
+    }
+
+    .quick-link:hover .quick-link-icon {
+      background: rgba(26, 120, 252, 0.12);
+      color: #1a78fc;
+    }
+
+    .quick-link-icon svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .quick-link-name {
+      font-size: 13px;
+      font-weight: 500;
+      color: #374151;
+      text-align: center;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 100%;
+    }
+
+    /* Search Box */
+    .search-box {
+      background: white;
+      border: 2px solid #e5e7eb;
+      border-radius: 16px;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 40px;
+      transition: all 0.2s;
+    }
+
+    .search-box:focus-within {
+      border-color: #1a78fc;
+      box-shadow: 0 0 0 4px rgba(26, 120, 252, 0.12);
+    }
+
+    .search-box svg {
+      width: 20px;
+      height: 20px;
+      color: #9ca3af;
+    }
+
+    .search-box input {
+      flex: 1;
+      border: none;
+      outline: none;
+      font-family: inherit;
+      font-size: 15px;
+      color: #1f2937;
+      background: transparent;
+    }
+
+    .search-box input::placeholder {
+      color: #9ca3af;
+    }
+
+    /* Footer */
+
+    /* Locked State */
+    .locked-view {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 80vh;
+      text-align: center;
+      padding: 24px;
+    }
+
+    .locked-view.active {
+      display: flex;
+    }
+
+    .dashboard-view {
+      display: block;
+    }
+
+    .dashboard-view.hidden {
+      display: none;
+    }
+
+    .login-card {
+      width: min(420px, 100%);
+      background: white;
+      border-radius: 20px;
+      padding: 32px;
+      border: 1px solid rgba(26, 120, 252, 0.15);
+      box-shadow: 0 16px 40px rgba(15, 23, 42, 0.08);
+    }
+
+    .login-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 20px;
+      gap: 12px;
+    }
+
+    .login-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: #1f2937;
+    }
+
+    .login-subtitle {
+      font-size: 14px;
+      color: #6b7280;
+    }
+
+    .login-form {
+      text-align: left;
+    }
+
+    .login-form .input-group {
+      margin-bottom: 16px;
+    }
+
+    .login-form label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 6px;
+    }
+
+    .login-form .input-wrapper {
+      position: relative;
+    }
+
+    .login-form input {
+      width: 100%;
+      padding: 12px 42px 12px 14px;
+      border: 2px solid #e5e7eb;
+      border-radius: 12px;
+      font-family: inherit;
+      font-size: 14px;
+      color: #111827;
+      background: #f9fafb;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .login-form input:focus {
+      outline: none;
+      border-color: #1a78fc;
+      box-shadow: 0 0 0 4px rgba(26, 120, 252, 0.12);
+      background: white;
+    }
+
+    .toggle-visibility {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 32px;
+      height: 32px;
+      border: none;
+      background: transparent;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: #9ca3af;
+    }
+
+    .toggle-visibility:hover {
+      color: #111827;
+    }
+
+    .toggle-visibility:focus-visible {
+      outline: 2px solid rgba(26, 120, 252, 0.4);
+      border-radius: 8px;
+    }
+
+    .toggle-visibility svg {
+      width: 16px;
+      height: 16px;
+      pointer-events: none;
+    }
+
+    .toggle-visibility .icon-hide {
+      display: none;
+    }
+
+    .toggle-visibility.showing .icon-show {
+      display: none;
+    }
+
+    .toggle-visibility.showing .icon-hide {
+      display: block;
+    }
+
+    .login-error {
+      display: none;
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #dc2626;
+      padding: 10px 12px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 500;
+      margin-bottom: 16px;
+    }
+
+    .login-error.show {
+      display: block;
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 12px 16px;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(145deg, #1a78fc, #1565d8);
+      color: white;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      box-shadow: 0 8px 20px rgba(26, 120, 252, 0.3);
+    }
+
+    .login-btn:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    @media (max-width: 640px) {
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+      .header {
+        flex-direction: column;
+        gap: 20px;
+        text-align: center;
+      }
+      .clock-widget {
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Locked State -->
+  <div id="locked-view" class="locked-view">
+    <div class="login-card">
+      <div class="login-header">
+        <div class="brand-logo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+        </div>
+        <div class="login-title">Sign in to start browsing</div>
+        <div class="login-subtitle">Use your student ID and PIN</div>
+      </div>
+      <div id="newtab-error" class="login-error"></div>
+      <form id="newtab-login-form" class="login-form">
+        <div class="input-group">
+          <label for="newtab-student-id">Student ID</label>
+          <div class="input-wrapper">
+            <input id="newtab-student-id" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="8" autocomplete="off" placeholder="Enter 6-8 digit ID" required>
+          </div>
+        </div>
+        <div class="input-group">
+          <label for="newtab-pin">PIN</label>
+          <div class="input-wrapper">
+            <input id="newtab-pin" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="4" autocomplete="off" placeholder="Enter 4-digit PIN" required>
+            <button class="toggle-visibility" type="button" aria-label="Show PIN" title="Show PIN">
+              <svg class="icon-show" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+              <svg class="icon-hide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a21.77 21.77 0 0 1 5.11-6.73"/>
+                <path d="M1 1l22 22"/>
+                <path d="M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 8 11 8a21.77 21.77 0 0 1-3.19 4.56"/>
+                <path d="M9.9 9.9a3 3 0 0 0 4.24 4.24"/>
+                <path d="M14.12 14.12 9.88 9.88"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+        <button id="newtab-login-btn" class="login-btn" type="submit">Sign In</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Dashboard View -->
+  <div id="dashboard-view" class="dashboard-view hidden">
+    <div class="container">
+      <header class="header">
+        <div class="brand">
+          <div class="brand-logo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+          </div>
+          <span class="brand-text">Apni Pathshala</span>
+        </div>
+        <div class="clock-widget">
+          <div class="clock" id="clock">--:--</div>
+          <div class="date" id="date">Loading...</div>
+        </div>
+      </header>
+
+      <section class="welcome-section">
+        <h1 class="welcome-text">Welcome back, <span id="student-name">Student</span></h1>
+        <p class="welcome-sub">
+          <span id="center-name">Learning Center</span>
+          <span class="status-indicator">
+            <span class="status-dot"></span>
+            <span class="status-text">Protected</span>
+          </span>
+        </p>
+      </section>
+
+      <section class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value" id="session-time">0h 0m</div>
+          <div class="stat-label">Session Time</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="sites-visited">0</div>
+          <div class="stat-label">Sites Visited</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="blocked-count">0</div>
+          <div class="stat-label">Blocked Attempts</div>
+        </div>
+      </section>
+
+      <div class="search-box">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"/>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <input type="text" id="search-input" placeholder="Search Google or type a URL..." autocomplete="off">
+      </div>
+
+      <section>
+        <h2 class="section-title">Quick Links</h2>
+        <div class="quick-links" id="quick-links">
+          <a class="quick-link" href="https://www.google.com">
+            <div class="quick-link-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+                <circle cx="11" cy="11" r="8"/>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+              </svg>
+            </div>
+            <span class="quick-link-name">Google</span>
+          </a>
+          <a class="quick-link" href="https://www.youtube.com">
+            <div class="quick-link-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+                <polygon points="5 3 19 12 5 21 5 3"/>
+              </svg>
+            </div>
+            <span class="quick-link-name">YouTube</span>
+          </a>
+          <a class="quick-link" href="https://www.wikipedia.org">
+            <div class="quick-link-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+              </svg>
+            </div>
+            <span class="quick-link-name">Wikipedia</span>
+          </a>
+          <a class="quick-link" href="https://www.khanacademy.org">
+            <div class="quick-link-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+                <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+                <path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"/>
+              </svg>
+            </div>
+            <span class="quick-link-name">Khan Academy</span>
+          </a>
+          <a class="quick-link" href="https://classroom.google.com">
+            <div class="quick-link-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+                <line x1="16" y1="13" x2="8" y2="13"/>
+                <line x1="16" y1="17" x2="8" y2="17"/>
+              </svg>
+            </div>
+            <span class="quick-link-name">Classroom</span>
+          </a>
+          <a class="quick-link" href="https://translate.google.com">
+            <div class="quick-link-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="2" y1="12" x2="22" y2="12"/>
+                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+              </svg>
+            </div>
+            <span class="quick-link-name">Translate</span>
+          </a>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <script type="module" src="newtab.js"></script>
+</body>
+</html>
